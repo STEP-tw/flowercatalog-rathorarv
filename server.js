@@ -2,6 +2,7 @@ let fs = require('fs');
 const Comment = require('./comments.js');
 let comments = new Comment();
 comments.getallPreviousComments();
+
 const timeStamp = require('./time.js').timeStamp;
 const http = require('http');
 const WebApp = require('./webapp');
@@ -34,15 +35,18 @@ const getHeader = function (file) {
   return headers[fileType];
 };
 
+const getName = function(req){
+  let name = `username :<strong>${req.user.userName}</strong>`;
+  return name;
+}
 const serveFile = function (req, res) {
   if(!req.user  && req.url == '/guestPage.html') {
-    res.redirect('/loginPage.html');
-    res.end();
-    return;
+    req.url = '/withoutLoginGuest.html';
   }
   let filePath = `public${req.url}`;
   if (req.method == 'GET' && fs.existsSync(filePath)) {
     res.setHeader('content-type', getHeader(filePath));
+    if(req.url=='/guestPage.html') res.write(getName(req));
     res.write(fs.readFileSync(filePath));
     res.end();
   }
@@ -68,11 +72,7 @@ app.use(loadUser);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
 app.use(serveFile);
-app.post('/register',(req,res)=>{
-  registered_users.push(req.body);
-  res.redirect('guestPage.html')
-  res.end();
-});
+
 app.post('/login',(req,res)=>{
   let user = registered_users.find(u=>u.userName==req.body.userName);
   if(!user) {
@@ -92,8 +92,8 @@ app.get('/logout',(req,res)=>{
   delete req.user.sessionid;
   res.redirect('/index.html');
 });
+
 app.post('/commentHandler',(req,res)=>{
-    if(!req.user.sessionid) res.redirect('/login');
     let nameAndComment = req.body;
     comments.addComment(nameAndComment);
     comments.writeInConfidFile();
