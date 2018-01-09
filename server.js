@@ -1,4 +1,7 @@
 let fs = require('fs');
+const Comment = require('./comments.js');
+let comments = new Comment();
+comments.getallPreviousComments();
 const timeStamp = require('./time.js').timeStamp;
 const http = require('http');
 const WebApp = require('./webapp');
@@ -16,6 +19,36 @@ let logRequest = (req,res)=>{
 
   console.log(`${req.method} ${req.url}`);
 }
+
+const getHeader = function (file) {
+  let fileType = file.split('.')[1];
+  let headers = {
+    'css': 'text/css',
+    'html': 'text/html',
+    'js': 'text/javascript',
+    'png': 'image/png',
+    'gif': 'image/gif',
+    'jpg': 'image/jpg',
+    'pdf': 'application/pdf'
+  }
+  return headers[fileType];
+};
+
+const serveFile = function (req, res) {
+  if(!req.user && req.url == '/guestPage.html') {
+    res.redirect('/login');
+    console.log('jahdksflajdss');
+    res.end();
+    return;
+  }
+  let filePath = `public${req.url}`;
+  if (req.method == 'GET' && fs.existsSync(filePath)) {
+    res.setHeader('content-type', getHeader(filePath));
+    res.write(fs.readFileSync(filePath));
+    res.end();
+  }
+}
+
 let loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
   let user = registered_users.find(u=>u.sessionid==sessionid);
@@ -24,17 +57,18 @@ let loadUser = (req,res)=>{
   }
 };
 let redirectLoggedInUserToHome = (req,res)=>{
-  if(req.urlIsOneOf(['/','/login']) && req.user) res.redirect('/home');
+  if(req.urlIsOneOf(['/','/login']) && req.user) res.redirect('/guestPage.html');
 }
 let redirectLoggedOutUserToLogin = (req,res)=>{
   if(req.urlIsOneOf(['/','/home','/logout']) && !req.user) res.redirect('/login');
 }
 
 let app = WebApp.create();
-app.use(logRequest);
+// app.use(logRequest);
 app.use(loadUser);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
+app.use(serveFile);
 app.get('/login',(req,res)=>{
   res.setHeader('Content-type','text/html');
   if(req.cookies.logInFailed) res.write('<p>logIn Failed</p>');
@@ -51,7 +85,7 @@ app.post('/login',(req,res)=>{
   let sessionid = new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
-  res.redirect('/home');
+  res.redirect('guestPage.html');
 });
 app.get('/home',(req,res)=>{
   res.setHeader('Content-type','text/html');
@@ -64,7 +98,15 @@ app.get('/logout',(req,res)=>{
   delete req.user.sessionid;
   res.redirect('/login');
 });
-
+app.post('/commentHandler',(req,res)=>{
+    if(!req.user.sessionid) res.redirect('/login');
+    let nameAndComment = req.body;
+    comments.addComment(nameAndComment);
+    comments.writeInConfidFile();
+    comments.writeInPublicFile();
+    res.write(JSON.stringify(nameAndComment));
+    res.end();
+})
 const PORT = 5000;
 let server = http.createServer(app);
 server.on('error',e=>console.error('**error**',e.message));

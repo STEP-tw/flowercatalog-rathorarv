@@ -1,15 +1,13 @@
+
 const showData = function(person){
-  let comment = document.createElement('p');
+  let comment = '';
   let seperator = '----------------------------------------------------<br>';
-  comment.innerHTML += seperator;
-  comment.innerHTML += person.date + '&nbsp&nbsp' + 'by&nbsp';
-  comment.className += 'dateTable';
-  comment.innerHTML += person.name + '<br><br>';
-  comment.innerHTML += person.comment;
-  console.log(comment);
+  comment += seperator;
+  comment += person.date + '&nbsp&nbsp' + 'by&nbsp';
+  comment += person.name + '<br><br>';
+  comment += person.comment + "<br>";
   return comment;
 };
-
 const getInfo = function(){
   let name = document.getElementById('name').value;
   let comment = document.getElementById('comment').value;
@@ -17,7 +15,7 @@ const getInfo = function(){
     let returndata = this.responseText;
     let comment = JSON.parse(returndata);
     let feedback = document.getElementById('feedbacks');
-    feedback.innerHTML =  showData(comment) + feedback.innerHTML;
+    feedback.innerHTML =  showData(comment) + feedback.innerHTML  ;
   }
   let xhr = new XMLHttpRequest();
   xhr.addEventListener('load',callBack);
