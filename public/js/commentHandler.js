@@ -1,4 +1,3 @@
-
 const showData = function(person){
   let comment = '';
   let seperator = '----------------------------------------------------<br>';

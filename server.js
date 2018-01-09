@@ -35,9 +35,8 @@ const getHeader = function (file) {
 };
 
 const serveFile = function (req, res) {
-  if(!req.user && req.url == '/guestPage.html') {
-    res.redirect('/login');
-    console.log('jahdksflajdss');
+  if(!req.user  && req.url == '/guestPage.html') {
+    res.redirect('/loginPage.html');
     res.end();
     return;
   }
@@ -60,43 +59,38 @@ let redirectLoggedInUserToHome = (req,res)=>{
   if(req.urlIsOneOf(['/','/login']) && req.user) res.redirect('/guestPage.html');
 }
 let redirectLoggedOutUserToLogin = (req,res)=>{
-  if(req.urlIsOneOf(['/','/home','/logout']) && !req.user) res.redirect('/login');
+  if(req.urlIsOneOf(['/','/home','/logout']) && !req.user) res.redirect('/index.html');
 }
 
 let app = WebApp.create();
-// app.use(logRequest);
+app.use(logRequest);
 app.use(loadUser);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
 app.use(serveFile);
-app.get('/login',(req,res)=>{
-  res.setHeader('Content-type','text/html');
-  if(req.cookies.logInFailed) res.write('<p>logIn Failed</p>');
-  res.write('<form method="POST"> <input name="userName"><input name="place"> <input type="submit"></form>');
+app.post('/register',(req,res)=>{
+  registered_users.push(req.body);
+  res.redirect('guestPage.html')
   res.end();
 });
 app.post('/login',(req,res)=>{
   let user = registered_users.find(u=>u.userName==req.body.userName);
   if(!user) {
     res.setHeader('Set-Cookie',`logInFailed=true`);
-    res.redirect('/login');
+    res.redirect('/loginPage.html');
     return;
   }
   let sessionid = new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   user.sessionid = sessionid;
-  res.redirect('guestPage.html');
+  res.redirect('/guestPage.html');
 });
-app.get('/home',(req,res)=>{
-  res.setHeader('Content-type','text/html');
-  res.write(`<p>Hello ${req.user.name}</p>`);
-  res.end();
-});
+
 app.get('/logout',(req,res)=>{
   res.setHeader('set-cookie',[`sessionid=0; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`,
   `logInFailed=false; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`]);
   delete req.user.sessionid;
-  res.redirect('/login');
+  res.redirect('/index.html');
 });
 app.post('/commentHandler',(req,res)=>{
     if(!req.user.sessionid) res.redirect('/login');
@@ -106,7 +100,8 @@ app.post('/commentHandler',(req,res)=>{
     comments.writeInPublicFile();
     res.write(JSON.stringify(nameAndComment));
     res.end();
-})
+});
+
 const PORT = 5000;
 let server = http.createServer(app);
 server.on('error',e=>console.error('**error**',e.message));
