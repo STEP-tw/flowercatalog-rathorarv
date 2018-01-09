@@ -1,0 +1,114 @@
+.subHeading {
+  font-size: 30px;
+  padding-left: 600px;
+  color: orange;
+  border-bottom: 2px solid grey;
+}
+
+.flower {
+  height: 650px;
+  width: 1000px;
+  position: absolute;
+}
+
+.pages {
+  align: left;
+  padding-left: 1000px;
+  padding-top: 200px;
+}
+
+.waterPot {
+  padding-left: 1100px;
+  position: absolute;
+}
+
+.guest {
+  padding-left: 1000px;
+  position: absolute;
+  padding-top: 100px;
+}
+
+.abeliophyllumHeading {
+  padding-top: 1px;
+  padding-left: 550px;
+  color: orange;
+  border-bottom: 2px solid lightgrey;
+}
+
+.abeliophyllum {
+  height: 600px;
+  width: 650px;
+  position: absolute;
+}
+
+.ageratum {
+  height: 550px;
+  width: 750px;
+  position: absolute;
+}
+
+.abeliophyllumPara {
+  position: absolute;
+  padding-left: 660px;
+  font-size: 20px;
+  padding-top: 200px;
+}
+
+.ageratumPara {
+  position: absolute;
+  padding-left: 760px;
+  font-size: 20px;
+  padding-top: 200px;
+}
+
+.forDownloadLink {
+  padding-left: 760px;
+  padding-top: 450px;
+  font-size: 20px;
+}
+
+.forLink {
+  padding-left: 660px;
+  padding-top: 500px;
+  font-size: 20px;
+}
+
+#name {
+  font-size: 20px;
+  margin-left: 40px;
+}
+
+#comment {
+  font-size: 20px
+}
+
+.button {
+  margin-left: 100px;
+  height: 30px;
+  width: 70px;
+}
+
+.guestPage {
+  padding-top: 1px;
+  padding-left: 550px;
+  color: orange;
+}
+
+.forHome {
+  margin-top: 20px;
+  font-size: 20px;
+  color: green;
+  padding-left: 10px;
+}
+
+.error {
+  align-content: center;
+}
+
+
+.dateTable {
+  font-size: 30px;
+  padding-left: 90px;
+  color: steelblue;
+}
+
