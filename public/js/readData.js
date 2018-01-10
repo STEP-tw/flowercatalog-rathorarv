@@ -6,4 +6,5 @@ let readData = function(){
   feedbacks.innerHTML = block.join('<br>');
 }
 
+
 window.onload = readData;

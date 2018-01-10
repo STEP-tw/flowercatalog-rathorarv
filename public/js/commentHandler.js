@@ -8,7 +8,6 @@ const showData = function(person){
   return comment;
 };
 const getInfo = function(){
-  let name = document.getElementById('name').value;
   let comment = document.getElementById('comment').value;
   let callBack = function(){
     let returndata = this.responseText;
@@ -19,5 +18,5 @@ const getInfo = function(){
   let xhr = new XMLHttpRequest();
   xhr.addEventListener('load',callBack);
   xhr.open('POST','commentHandler','true');
-  xhr.send(`name=${name}&comment=${comment}`);
+  xhr.send(`comment=${comment}`);
 }
