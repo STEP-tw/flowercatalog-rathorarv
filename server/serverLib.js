@@ -3,7 +3,7 @@ const libUtility = require('./libUtility.js');
 const Comment = require('./comments.js');
 let comments = new Comment();
 comments.getallPreviousComments();
-let registered_users = [{userName:'arvinds',name:'arvind singh'},{userName:'ravinder',name:'ravinder'}];
+let registered_users = [{userName:'arvinds',name:'arvind singh'},{userName:'ravinder',name:'ravinder'},{userName:"nrjais",name:"neeraj jaiswal"}];
 
 exports.logRequest = (req,res)=>{
   let text = ['----------------------------',
@@ -60,7 +60,7 @@ exports.commentHandler = (req,res)=>{
     res.end();
     return;
   }
-  req.body.name = req.user.userName;
+  req.body.name = req.user.name;
     let nameAndComment = req.body;
     comments.addComment(nameAndComment);
     comments.writeInConfidFile();
@@ -76,7 +76,7 @@ exports.guestPageHandler = (req,res)=>{
   }
   res.setHeader('content-type', libUtility.getHeader(req.url));
   let guestPage = fs.readFileSync("./dynamicPage/"+ req.url);
-  let replacedContent = guestPage.toString().replace('username',`<strong style="font-size:20px">${req.user.userName}</strong>`);
+  let replacedContent = guestPage.toString().replace('username',`<strong style="font-size:20px">${req.user.name}</strong>`);
   res.write(replacedContent);
   res.end();
 }
