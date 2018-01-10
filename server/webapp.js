@@ -1,3 +1,4 @@
+const qs = require('qs');
 const toKeyValue = kv => {
   let parts = kv.split('=');
   return {
@@ -9,7 +10,7 @@ const accumulate = (o, kv) => {
   o[kv.key] = kv.value;
   return o;
 };
-const parseBody = text => text && text.split('&').map(toKeyValue).reduce(accumulate, {}) || {};
+const parseBody = text => text && qs.parse(text) || {};
 let redirect = function (path) {
   console.log(`redirecting to ${path}`);
   this.statusCode = 302;

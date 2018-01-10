@@ -75,7 +75,7 @@ exports.guestPageHandler = (req,res)=>{
     return;
   }
   res.setHeader('content-type', libUtility.getHeader(req.url));
-  let guestPage = fs.readFileSync("./"+ req.url);
+  let guestPage = fs.readFileSync("./dynamicPage/"+ req.url);
   let replacedContent = guestPage.toString().replace('username',`<strong style="font-size:20px">${req.user.userName}</strong>`);
   res.write(replacedContent);
   res.end();

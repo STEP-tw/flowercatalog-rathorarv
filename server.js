@@ -1,8 +1,8 @@
 let fs = require('fs');
 const http = require('http');
 
-const WebApp = require('./webapp');
-const lib = require('./serverLib.js');
+const WebApp = require('./server/webapp');
+const lib = require('./server/serverLib.js');
 
 let app = WebApp.create();
 app.use(lib.logRequest);
